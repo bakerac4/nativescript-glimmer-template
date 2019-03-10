@@ -1,6 +1,5 @@
 'use strict';
 const chalk = require('chalk');
-const RSVP = require('rsvp');
 
 module.exports = {
   description: '',
@@ -31,10 +30,12 @@ module.exports = {
     }
 
     this._writeStatusToUI(chalk.green, installText, packageNames.join(', '));
-    return RSVP.hash(task.run({
-      'save-dev': false,
-      verbose: false,
-      packages: packageArray,
-    }), this.addPackagesToProject([{name: 'nativescript-dev-webpack', target: '~0.20.0'}]));
+    return this.addPackagesToProject([{name: 'nativescript-dev-webpack', target: '~0.20.0'}]).then(() => {
+      return task.run({
+        'save-dev': false,
+        verbose: false,
+        packages: packageArray,
+      });
+    });
   }
 };
