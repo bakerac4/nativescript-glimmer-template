@@ -1,5 +1,11 @@
 'use strict';
 const chalk = require('chalk');
+const stringUtil = require('ember-cli-string-utils');
+const sortPackageJson = require('sort-package-json');
+
+const stringifyAndNormalize = function stringifyAndNormalize(contents) {
+  return `${JSON.stringify(contents, null, 2)}\n`;
+};
 
 module.exports = {
   description: '',
@@ -9,6 +15,22 @@ module.exports = {
   beforeInstall: function() {
     return this.addPackagesToProject([{name: 'nativescript-dev-webpack', target: '~0.20.0'}]);
   },
+
+  updatePackageJson(content) {
+   let contents = JSON.parse(content);
+
+   contents.nativescript = {
+     "id": `org.nativescript.${stringUtil.camelize(this.options.entity.name)}`,
+     "tns-ios": {
+       "version": "5.2.0"
+     },
+     "tns-android": {
+       "version": "5.2.1"
+     }
+   };
+
+   return stringifyAndNormalize(sortPackageJson(contents));
+ },
 
   afterInstall: function() {
     let task = this.taskFor('npm-install');
