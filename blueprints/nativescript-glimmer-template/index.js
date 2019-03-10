@@ -7,14 +7,12 @@ module.exports = {
   normalizeEntityName: function() {}, // no-op since we're just adding dependencies
 
   afterInstall: function() {
-    return this.addPackagesToProject([
+    let task = this.taskFor('npm-install');
+    let packages = [
       { name: 'nativescript-theme-core', target: '~1.0.4'},
       { name: 'tns-core-modules', target: '5.2.2'},
       { name: 'nativescript-glimmer', target: 'git+https://github.com/bakerac4/nativescript-glimmer.git#test3'}
-    ]); // is a promise
-  },
-  addPackagesToProject(packages, dev = false) {
-    let task = this.taskFor('npm-install');
+    ];
     let installText = (packages.length > 1) ? 'install packages' : 'install package';
     let packageNames = [];
     let packageArray = [];
@@ -34,9 +32,9 @@ module.exports = {
     this._writeStatusToUI(chalk.green, installText, packageNames.join(', '));
 
     return task.run({
-      'save-dev': dev,
+      'save-dev': false,
       verbose: false,
       packages: packageArray,
     });
-  },
+  }
 };
