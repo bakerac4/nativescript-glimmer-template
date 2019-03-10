@@ -6,6 +6,10 @@ module.exports = {
 
   normalizeEntityName: function() {}, // no-op since we're just adding dependencies
 
+  beforeInstall: function() {
+    return this.addPackagesToProject([{name: 'nativescript-dev-webpack', target: '~0.20.0'}]);
+  },
+
   afterInstall: function() {
     let task = this.taskFor('npm-install');
     let packages = [
@@ -30,12 +34,10 @@ module.exports = {
     }
 
     this._writeStatusToUI(chalk.green, installText, packageNames.join(', '));
-    return this.addPackagesToProject([{name: 'nativescript-dev-webpack', target: '~0.20.0'}]).then(() => {
-      return task.run({
-        'save-dev': false,
-        verbose: false,
-        packages: packageArray,
-      });
+    return task.run({
+      'save-dev': false,
+      verbose: false,
+      packages: packageArray,
     });
   }
 };
