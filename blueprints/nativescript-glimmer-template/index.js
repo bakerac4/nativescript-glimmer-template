@@ -2,18 +2,35 @@
 const chalk = require('chalk');
 const stringUtil = require('ember-cli-string-utils');
 const sortPackageJson = require('sort-package-json');
+const path = require('path');
+const fs = require('fs-extra');
 
 const stringifyAndNormalize = function stringifyAndNormalize(contents) {
   return `${JSON.stringify(contents, null, 2)}\n`;
 };
 
+const replacers = {
+  'package.json'(content) {
+    return this.updatePackageJson(content);
+  },
+};
+
+
 module.exports = {
   description: '',
 
-  normalizeEntityName: function() {}, // no-op since we're just adding dependencies
+  normalizeEntityName() {}, // no-op since we're just adding dependencies
 
-  beforeInstall: function() {
+  beforeInstall() {
     return this.addPackagesToProject([{name: 'nativescript-dev-webpack', target: '~0.20.0'}]);
+  },
+
+  _readJsonSync(path) {
+    return fs.readJsonSync(path);
+  },
+
+  _writeFileSync(path, content) {
+    fs.writeFileSync(path, content);
   },
 
   updatePackageJson(content) {
@@ -60,6 +77,11 @@ module.exports = {
       'save-dev': false,
       verbose: false,
       packages: packageArray,
-    });
+    }).then(() => {
+      let packagePath = path.join(this.project.root, 'package.json');
+      let contents = this._readJsonSync(packagePath);
+      let updatedContents = this.updatePackageJson(contents);
+      return this._writeFileSync(packagePath, updatedContents);
+    })
   }
 };
