@@ -9,13 +9,6 @@ const stringifyAndNormalize = function stringifyAndNormalize(contents) {
   return `${JSON.stringify(contents, null, 2)}\n`;
 };
 
-const replacers = {
-  'package.json'(content) {
-    return this.updatePackageJson(content);
-  },
-};
-
-
 module.exports = {
   description: '',
 
@@ -34,9 +27,8 @@ module.exports = {
   },
 
   updatePackageJson(content) {
-   let contents = JSON.parse(content);
 
-   contents.nativescript = {
+   content.nativescript = {
      "id": `org.nativescript.${stringUtil.camelize(this.options.entity.name)}`,
      "tns-ios": {
        "version": "5.2.0"
@@ -46,7 +38,7 @@ module.exports = {
      }
    };
 
-   return stringifyAndNormalize(sortPackageJson(contents));
+   return stringifyAndNormalize(sortPackageJson(content));
  },
 
   afterInstall: function() {
