@@ -28,7 +28,7 @@ module.exports = {
 
   updatePackageJson(content, options) {
     const name = options.project.Project.pkg.name;
-    console.log(options);
+    console.log(options.project.Project);
    content.nativescript = {
      "id": `org.nativescript.${stringUtil.camelize(name)}`,
      "tns-ios": {
