@@ -14,9 +14,9 @@ module.exports = {
 
   normalizeEntityName() {}, // no-op since we're just adding dependencies
 
-  // beforeInstall() {
-  //   return this.addPackagesToProject([{name: 'nativescript-dev-webpack', target: '~0.20.0'}]);
-  // },
+  beforeInstall() {
+    return this.addPackagesToProject([{name: 'nativescript-dev-webpack', target: '~0.20.0'}]);
+  },
 
   _readJsonSync(path) {
     return fs.readJsonSync(path);
