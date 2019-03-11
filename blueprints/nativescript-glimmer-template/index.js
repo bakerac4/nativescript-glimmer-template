@@ -26,10 +26,10 @@ module.exports = {
     fs.writeFileSync(path, content);
   },
 
-  updatePackageJson(content) {
+  updatePackageJson(content, options) {
 
    content.nativescript = {
-     "id": `org.nativescript.${stringUtil.camelize(this.options.entity.name)}`,
+     "id": `org.nativescript.${stringUtil.camelize(options.entity.name)}`,
      "tns-ios": {
        "version": "5.2.0"
      },
@@ -41,7 +41,7 @@ module.exports = {
    return stringifyAndNormalize(sortPackageJson(content));
  },
 
-  afterInstall: function() {
+  afterInstall: function(options) {
     let task = this.taskFor('npm-install');
     let packages = [
       { name: 'nativescript-theme-core', target: '~1.0.4'},
@@ -72,7 +72,7 @@ module.exports = {
     }).then(() => {
       let packagePath = path.join(this.project.root, 'package.json');
       let contents = this._readJsonSync(packagePath);
-      let updatedContents = this.updatePackageJson(contents);
+      let updatedContents = this.updatePackageJson(contents, options);
       return this._writeFileSync(packagePath, updatedContents);
     })
   }
