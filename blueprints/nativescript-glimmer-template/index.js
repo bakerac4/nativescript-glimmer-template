@@ -75,6 +75,9 @@ module.exports = {
       let contents = this._readJsonSync(packagePath);
       let updatedContents = this.updatePackageJson(contents, options);
       return this._writeFileSync(packagePath, updatedContents);
+    }).then(() => {
+      let packagePath = path.join(this.project.root, 'app/app.css');
+      return this._writeFileSync(packagePath, {});
     })
   }
 };
