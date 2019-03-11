@@ -77,7 +77,7 @@ module.exports = {
       return this._writeFileSync(packagePath, updatedContents);
     }).then(() => {
       let packagePath = path.join(this.project.root, 'app/app.css');
-      return this._writeFileSync(packagePath, {});
+      return this._writeFileSync(packagePath);
     })
   }
 };
