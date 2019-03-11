@@ -4,7 +4,6 @@ const stringUtil = require('ember-cli-string-utils');
 const sortPackageJson = require('sort-package-json');
 const path = require('path');
 const fs = require('fs-extra');
-const normalizeEntityName = require('ember-cli-normalize-entity-name');
 
 const stringifyAndNormalize = function stringifyAndNormalize(contents) {
   return `${JSON.stringify(contents, null, 2)}\n`;
@@ -13,10 +12,7 @@ const stringifyAndNormalize = function stringifyAndNormalize(contents) {
 module.exports = {
   description: '',
 
-  normalizeEntityName(entityName) {
-    entityName = normalizeEntityName(entityName);
-    return entityName;
-  },
+  normalizeEntityName() {}, // no-op since we're just adding dependencies
 
   beforeInstall() {
     return this.addPackagesToProject([{name: 'nativescript-dev-webpack', target: '~0.20.0'}]);
