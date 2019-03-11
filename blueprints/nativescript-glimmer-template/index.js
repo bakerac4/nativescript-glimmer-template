@@ -27,7 +27,7 @@ module.exports = {
   },
 
   updatePackageJson(content, options) {
-    console.log(options.project.Project);
+    console.log(options.project);
     const name = options.project.Project.pkg.name;
 
    content.nativescript = {
