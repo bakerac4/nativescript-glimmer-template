@@ -28,7 +28,7 @@ module.exports = {
 
   updatePackageJson(content, options) {
     console.log(options.project);
-    const name = options.project.Project.pkg.name;
+    const name = options.project.pkg.name;
 
    content.nativescript = {
      "id": `org.nativescript.${stringUtil.camelize(name)}`,
