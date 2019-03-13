@@ -47,7 +47,9 @@ module.exports = {
     let packages = [
       { name: 'nativescript-theme-core', target: '~1.0.4'},
       { name: 'tns-core-modules', target: '5.2.2'},
-      { name: 'nativescript-glimmer', target: 'git+https://github.com/bakerac4/nativescript-glimmer.git#test3'}
+      { name: 'nativescript-glimmer', target: 'git+https://github.com/bakerac4/nativescript-glimmer.git#master'},
+      { name: 'glimmer-analyzer', target: '^0.3.3'},
+      { name: '@glimmer/compiler', target: '^0.39.2'}
     ];
     let installText = (packages.length > 1) ? 'install packages' : 'install package';
     let packageNames = [];

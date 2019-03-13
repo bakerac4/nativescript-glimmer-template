@@ -1,55 +1,40 @@
 import NativescriptGlimmer from 'nativescript-glimmer';
 import { ResolverDelegate, Resolver, NativeComponent } from 'nativescript-glimmer';
 import Component from '@glimmer/component';
-
+import {knownFolders} from "tns-core-modules/file-system";
 const resolverDelegate = new ResolverDelegate();
-resolverDelegate.addComponent(
-  'GlimmerMobile',
-  0,
-  `
-  <page>
+const resolver = new Resolver();
 
-	<actionBar class="action-bar">
-		<label class="action-bar-title" text="Home"></label>
-	</actionBar>
+function addTemplates(appFolder) {
 
-	<gridlayout>
-		<scrollview class="page">
-			<stacklayout class="home-panel">
-				<!--Add your page content here-->
-				<label textWrap="true" text="Payments App!" class="h2 description-label opensans-semi-bold"></label>
-				<label textWrap="true" text="This sample App is to showcase how to implement a carousel with purely XML, JS and CSS only."
-				 class="h3 description-label opensans-regular"></label>
-				<label textWrap="true" text="This sample used the 'ui/builder' plugin to dynamically loading custom components from XML templates."
-				 class="h3 description-label opensans-regular"></label>
-			</stacklayout>
-		</scrollview>
-	</gridlayout>
-</page>
-  `
-  ,
-  {
-    attributeHook: true,
-    createArgs: true,
-    createCaller: false,
-    createInstance: true,
-    dynamicLayout: false,
-    dynamicScope: false,
-    dynamicTag: true,
-    elementHook: true,
-    prepareArgs: false,
-    updateHook: true,
-    wrapped: false,
-  }
-);
-
-class GlimmerMobile extends Component {
-  title = 'Hi';
+    let templatesFile = appFolder.getFile("templates.json");
+    let templates = templatesFile.readTextSync();
+    // console.log(`Templates: ${templates}`);
+    JSON.parse(templates).forEach(template => {
+        resolverDelegate.addComponent(template.name, template.handle, template.source, template.capabilities);
+    });
 }
 
-const resolver = new Resolver();
-resolver.addComponent('GlimmerMobile', GlimmerMobile);
-const template = `<GlimmerMobile />`;
-const app = new NativescriptGlimmer(template, {}, resolverDelegate, resolver);
+function requireAll(r) { r.keys().forEach(r); }
+requireAll(require.context('../src/ui/components/', true, /component.ts$/));
 
-app.render();
+try {
+    let appFolder = knownFolders.currentApp();
+    addTemplates(appFolder);
+
+    let componentsFile = appFolder.getFile("components.json");
+    let components = componentsFile.readTextSync();
+    console.log(`About to resolve require`);
+    JSON.parse(components).forEach(component => {
+        console.log(`About to resolve require`);
+        const classFile = require(`../src/ui/components/${component.name}/component.ts`);
+        resolver.addComponent(component.name, classFile.default);
+    });
+
+    const app = new NativescriptGlimmer('MainTemplate', {}, resolverDelegate, resolver);
+
+    app.render();
+
+} catch(errors) {
+
+}

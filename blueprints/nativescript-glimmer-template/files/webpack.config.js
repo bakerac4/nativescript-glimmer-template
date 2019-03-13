@@ -8,6 +8,7 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 const { NativeScriptWorkerPlugin } = require("nativescript-worker-loader/NativeScriptWorkerPlugin");
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+const GlimmerNativePlugin = require("./plugins/glimmer-native-plugin.js")
 
 module.exports = env => {
     // Add your custom Activities, Services and other Android app components here.
@@ -16,9 +17,10 @@ module.exports = env => {
         "tns-core-modules/ui/frame/activity",
     ];
 
-    const platform = env && (env.android && "android" || env.ios && "ios");
+    let platform = env && (env.android && "android" || env.ios && "ios");
     if (!platform) {
-        throw new Error("You need to provide a target platform!");
+      platform = "ios";
+        // throw new Error("You need to provide a target platform!");
     }
 
     const platforms = ["ios", "android"];
@@ -63,7 +65,7 @@ module.exports = env => {
         },
         target: nativescriptTarget,
         entry: {
-            bundle: entryPath,
+            bundle: entryPath
         },
         output: {
             pathinfo: false,
@@ -195,7 +197,15 @@ module.exports = env => {
                             allowTsInNodeModules: true,
                         },
                     }
-                },
+                }
+                // Tell webpack how to find component templates
+                // {
+                //   test: /\.(hbs|ts)/,
+                //   include: [
+                //       resolve(__dirname, "src/ui/components")
+                //   ],
+                //   use: GlimmerNativeLoader
+                // }
             ]
         },
         plugins: [
@@ -206,6 +216,31 @@ module.exports = env => {
             }),
             // Remove all files from the out dir.
             new CleanWebpackPlugin([ `${dist}/**/*` ]),
+            // Register the compiler plugin and configure where to
+            // put the binary bytecode (.gbx file).
+            // new GlimmerCompiler({
+            //   output: 'templates.gbx',
+            //   mode: 'module-unification'
+            // }),
+            // new CopyWebpackPlugin([
+            //   {
+            //     from: `src/ui/components`,
+            //     // to: `${appFullPath}/src/ui/components`,
+            //     to: `/${projectRoot}/src/ui/components`,
+            //     context: projectRoot,
+            //     ignore: ['*.hbs'],
+            //     force: true
+            //   },
+            // ]),
+
+            // Copy native app resources to out dir.
+
+            new GlimmerNativePlugin({
+              dist: dist,
+              output: `${dist}/templates.js`,
+              context: projectRoot
+            }),
+
             // Copy native app resources to out dir.
             new CopyWebpackPlugin([
               {
