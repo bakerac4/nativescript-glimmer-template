@@ -30,7 +30,7 @@ try {
     let appFolder = knownFolders.currentApp();
     addTemplates(appFolder);
     addComponents(appFolder);
-    const app = new NativescriptGlimmer('<%= camelizedModuleName %>', {}, resolverDelegate, resolver);
+    const app = new NativescriptGlimmer('<%= name %>', {}, resolverDelegate, resolver);
     app.render();
 } catch(errors) {
     console.log(errors);

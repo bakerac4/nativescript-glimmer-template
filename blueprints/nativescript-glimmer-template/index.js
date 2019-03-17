@@ -12,6 +12,15 @@ const stringifyAndNormalize = function stringifyAndNormalize(contents) {
 module.exports = {
   description: '',
 
+  locals() {
+    let packageName = require('../../package').name;
+    const name = stringUtil.classify(packageName);
+
+    return {
+      name
+    };
+  },
+
   normalizeEntityName() {}, // no-op since we're just adding dependencies
 
   // beforeInstall() {
