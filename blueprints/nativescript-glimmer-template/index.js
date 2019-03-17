@@ -12,8 +12,8 @@ const stringifyAndNormalize = function stringifyAndNormalize(contents) {
 module.exports = {
   description: '',
 
-  locals() {
-    let packageName = require('../../package').name;
+  locals(options) {
+    let packageName = options.project.pkg.name;
     const name = stringUtil.classify(packageName);
 
     return {
