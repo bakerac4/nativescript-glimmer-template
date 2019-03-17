@@ -96,7 +96,7 @@ module.exports = {
             let packagePath = path.join(this.project.root, 'app/app.css');
             return fs.ensureFileSync(packagePath);
         }).then(() => {
-            let componentPath = path.join(this.project.root, `src/ui/components/${options.project.pkg.name}/template.hbs`);
+            let componentPath = path.join(this.project.root, `src/ui/components/${stringUtil.classify(options.project.pkg.name)}/template.hbs`);
             let updatedComponent = this.getDefaultComponentHbs();
             return this._writeFileSync(componentPath, updatedComponent);
         })
