@@ -8,7 +8,7 @@ function addTemplates(appFolder) {
     let templates = templatesFile.readTextSync();
     // console.log(`Templates: ${templates}`);
     JSON.parse(templates).forEach(template => {
-        resolverDelegate.addComponent(template.name, template.handle, template.source, template.capabilities);
+        resolverDelegate.registerComponent(template.name, template.handle, template.source, template.capabilities);
     });
 }
 
@@ -19,12 +19,12 @@ function addComponents(appFolder) {
     JSON.parse(components).forEach(component => {
         console.log(`About to resolve require`);
         const classFile = require(`../src/ui/components/${component.name}/component.ts`);
-        resolver.addComponent(component.name, classFile.default);
+        resolver.registerComponent(component.name, classFile.default);
     });
 }
 
-function requireAll(r) { r.keys().forEach(r); }
-requireAll(require.context('../src/ui/components/', true, /component.ts$/));
+// function requireAll(r) { r.keys().forEach(r); }
+// requireAll(require.context('../src/ui/components/', true, /component.ts$/));
 
 try {
     let appFolder = knownFolders.currentApp();
